@@ -41,7 +41,7 @@ public class Paths implements IPackageResolver {
 	public Paths(Command command) {
 		this.command=command;
 	}
-	
+
 	@Override
 	public FileSet getFileSet(Distribution distribution) {
 		String executableFileName;
@@ -60,7 +60,7 @@ public class Paths implements IPackageResolver {
 		}
 		return FileSet.builder().addEntry(FileType.Executable, executableFileName).build();
 	}
-	
+
 	//CHECKSTYLE:OFF
 	@Override
 	public ArchiveType getArchiveType(Distribution distribution) {
@@ -83,88 +83,128 @@ public class Paths implements IPackageResolver {
 
 	@Override
 	public String getPath(Distribution distribution) {
-		String sversion = getVersionPart(distribution.getVersion());
+		String versionStr = getVersionPart(distribution.getVersion());
+
+		if (distribution.getPlatform() == Platform.Solaris && isFeatureEnabled(distribution, Feature.NO_SOLARIS_SUPPORT)) {
+		    throw new IllegalArgumentException("Mongodb for solaris is not available anymore");
+        }
 
 		ArchiveType archiveType = getArchiveType(distribution);
-		String sarchiveType;
-		switch (archiveType) {
-			case TGZ:
-				sarchiveType = "tgz";
-				break;
-			case ZIP:
-				sarchiveType = "zip";
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown ArchiveType " + archiveType);
-		}
+		String archiveTypeStr = getArchiveString(archiveType);
 
-		String splatform;
-		switch (distribution.getPlatform()) {
-			case Linux:
-				splatform = "linux";
-				break;
-			case Windows:
-				splatform = "win32";
-				break;
-			case OS_X:
-				splatform = "osx";
-				break;
-			case Solaris:
-				splatform = "sunos5";
-				break;
-			case FreeBSD:
-				splatform = "freebsd";
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
-		}
+        String platformStr = getPlattformString(distribution);
 
-		String sbitSize;
-		switch (distribution.getBitsize()) {
-			case B32:
-				if (distribution.getVersion() instanceof IFeatureAwareVersion) {
-					IFeatureAwareVersion featuredVersion = (IFeatureAwareVersion) distribution.getVersion();
-					if (featuredVersion.enabled(Feature.ONLY_64BIT)) {
-						throw new IllegalArgumentException("this version does not support 32Bit: "+distribution);
-					}
-				}
-				
-				switch (distribution.getPlatform()) {
-					case Linux:
-						sbitSize = "i686";
-						break;
-					case Windows:
-						sbitSize = "i386";
-						break;
-					case OS_X:
-						sbitSize = "i386";
-						break;
-					default:
-						throw new IllegalArgumentException("Platform " + distribution.getPlatform() + " not supported yet on 32Bit Platform");
-				}
-				break;
-			case B64:
-				sbitSize = "x86_64";
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown BitSize " + distribution.getBitsize());
-		}
-		
-		if ((distribution.getBitsize()==BitSize.B64) && (distribution.getPlatform()==Platform.Windows)) {
-			if (useWindows2008PlusVersion()) {
-				sversion="2008plus-"+sversion;
-			}
-		}
+        String bitSizeStr = getBitSize(distribution);
 
-		return splatform + "/mongodb-" + splatform + "-" + sbitSize + "-" + sversion + "." + sarchiveType;
+        if ((distribution.getBitsize()==BitSize.B64) && (distribution.getPlatform()==Platform.Windows)) {
+				versionStr = (useWindows2008PlusVersion(distribution) ? "2008plus-": "")
+                        + (withSsl(distribution) ? "ssl-": "")
+                        + versionStr;
+		}
+		if (distribution.getPlatform() == Platform.OS_X && withSsl(distribution) ) {
+            return platformStr + "/mongodb-" + platformStr + "-ssl-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
+        }
+
+		return platformStr + "/mongodb-" + platformStr + "-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
 	}
 
-	protected boolean useWindows2008PlusVersion() {
-		// Windows Server 2008 R2  or Windows 7
-		String osName = System.getProperty("os.name");
-		if (osName.contains("Windows Server 2008 R2")) return true;
-		return osName.contains("Windows 7");
+    private String getArchiveString(ArchiveType archiveType) {
+        String sarchiveType;
+        switch (archiveType) {
+            case TGZ:
+                sarchiveType = "tgz";
+                break;
+            case ZIP:
+                sarchiveType = "zip";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown ArchiveType " + archiveType);
+        }
+        return sarchiveType;
+    }
+
+    private String getPlattformString(Distribution distribution) {
+        String splatform;
+        switch (distribution.getPlatform()) {
+            case Linux:
+                splatform = "linux";
+                break;
+            case Windows:
+                splatform = "win32";
+                break;
+            case OS_X:
+                splatform = "osx";
+                break;
+            case Solaris:
+                splatform = "sunos5";
+                break;
+            case FreeBSD:
+                splatform = "freebsd";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
+        }
+        return splatform;
+    }
+
+    private String getBitSize(Distribution distribution) {
+        String sbitSize;
+        switch (distribution.getBitsize()) {
+            case B32:
+                if (distribution.getVersion() instanceof IFeatureAwareVersion) {
+                    IFeatureAwareVersion featuredVersion = (IFeatureAwareVersion) distribution.getVersion();
+                    if (featuredVersion.enabled(Feature.ONLY_64BIT)) {
+                        throw new IllegalArgumentException("this version does not support 32Bit: "+distribution);
+                    }
+                }
+
+                switch (distribution.getPlatform()) {
+                    case Linux:
+                        sbitSize = "i686";
+                        break;
+                    case Windows:
+                        sbitSize = "i386";
+                        break;
+                    case OS_X:
+                        sbitSize = "i386";
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Platform " + distribution.getPlatform() + " not supported yet on 32Bit Platform");
+                }
+                break;
+            case B64:
+                sbitSize = "x86_64";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown BitSize " + distribution.getBitsize());
+        }
+        return sbitSize;
+    }
+
+    protected boolean useWindows2008PlusVersion(Distribution distribution) {
+	    String osName = System.getProperty("os.name");
+        if (osName.contains("Windows Server 2008 R2")
+                || (distribution.getVersion() instanceof IFeatureAwareVersion)
+                && ((IFeatureAwareVersion) distribution.getVersion()).enabled(Feature.ONLY_WINDOWS_2008_SERVER))  {
+            return true;
+        } else {
+            return osName.contains("Windows 7");
+        }
 	}
+
+	protected boolean withSsl(Distribution distribution) {
+        if ((distribution.getPlatform() == Platform.Windows || distribution.getPlatform() == Platform.OS_X)
+                && distribution.getVersion() instanceof IFeatureAwareVersion) {
+            return ((IFeatureAwareVersion) distribution.getVersion()).enabled(Feature.ONLY_WITH_SSL);
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean isFeatureEnabled(Distribution distribution, Feature feature) {
+	    return (distribution.getVersion() instanceof IFeatureAwareVersion
+                &&  ((IFeatureAwareVersion) distribution.getVersion()).enabled(feature));
+    }
 
 	protected static String getVersionPart(IVersion version) {
 		return version.asInDownloadPath();

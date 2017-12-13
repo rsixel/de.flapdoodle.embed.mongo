@@ -36,7 +36,7 @@ public class TestPaths extends TestCase {
 		super.setUp();
 		paths=new Paths(Command.MongoD) {
 			@Override
-			protected boolean useWindows2008PlusVersion() {
+			protected boolean useWindows2008PlusVersion(Distribution distribution) {
 				return false;
 			}
 		};
@@ -58,6 +58,7 @@ public class TestPaths extends TestCase {
 				"osx/mongodb-osx-x86_64-1.8.2-rc0.tgz");
 		checkPath(new Distribution(Version.V1_9_0, Platform.OS_X, BitSize.B32), "osx/mongodb-osx-i386-1.9.0.tgz");
 		checkPath(new Distribution(Version.V1_9_0, Platform.OS_X, BitSize.B64), "osx/mongodb-osx-x86_64-1.9.0.tgz");
+		checkPath(new Distribution(Version.V3_6_0, Platform.OS_X, BitSize.B64), "osx/mongodb-osx-ssl-x86_64-3.6.0.tgz");
 	}
 
 	private void checkPath(Distribution distribution, String match) {

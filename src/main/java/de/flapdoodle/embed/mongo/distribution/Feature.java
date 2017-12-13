@@ -29,7 +29,12 @@ public enum Feature {
 	STORAGE_ENGINE /* with >=3.0, default changhed with 3.2 */,
 	ONLY_64BIT /* mongodb 3.4 and beyond does not support 32 bit */, 
 	NO_CHUNKSIZE_ARG /*mongos since 3.4? does not support --chunkSize argument */, 
-	MONGOS_CONFIGDB_SET_STYLE /* mongos since 3.3.? */;
+	MONGOS_CONFIGDB_SET_STYLE /* mongos since 3.3.? */,
+	NO_HTTP_INTERFACE_ARG /*not supported since 3.6 https://docs.mongodb.com/manual/release-notes/3.6-compatibility/*/,
+	ONLY_WITH_SSL,
+	ONLY_WINDOWS_2008_SERVER,
+	NO_SOLARIS_SUPPORT;
+
 
 	public static EnumSet<Feature> asSet(Feature... features) {
 		if (features.length == 0) {
