@@ -44,15 +44,14 @@ import de.flapdoodle.embed.process.distribution.Distribution;
 import de.flapdoodle.embed.process.distribution.Platform;
 import de.flapdoodle.embed.process.extract.IExtractedFileSet;
 import de.flapdoodle.embed.process.runtime.Network;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-// CHECKSTYLE:OFF
-public class MongoDBRuntimeTest extends TestCase {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-	public void testNothing() {
+public class MongoDBRuntimeTest {
 
-	}
-	
+	@Test
 	public void testSingleVersion() throws IOException {
 		
 		RuntimeConfigBuilder defaultBuilder = new RuntimeConfigBuilder()
@@ -63,6 +62,7 @@ public class MongoDBRuntimeTest extends TestCase {
 		check(config, new Distribution(Version.V2_6_0, Platform.Windows, BitSize.B32));
 	}
 
+	@Test
 	public void testDistributions() throws IOException {
 		RuntimeConfigBuilder defaultBuilder = new RuntimeConfigBuilder()
 				.defaults(Command.MongoD);
@@ -87,7 +87,7 @@ public class MongoDBRuntimeTest extends TestCase {
 								.defaults()
 								.packageResolver(new Paths(Command.MongoD) {
 										@Override
-										protected boolean useWindows2008PlusVersion() {
+										protected boolean useWindows2008PlusVersion(Distribution distribution) {
 											return true;
 										}
 									}))).build();
@@ -114,7 +114,7 @@ public class MongoDBRuntimeTest extends TestCase {
 			// there is no osx 32bit version for v2.2.1 and above, so we dont check
 			return true;
 		}
-		if ((platform == Platform.Solaris)  && (bitsize == BitSize.B32)) {
+		if ((platform == Platform.Solaris)  && (bitsize == BitSize.B32) || version.enabled(Feature.NO_SOLARIS_SUPPORT)) {
 			return true;
 		}
 		if (platform == Platform.FreeBSD) {
@@ -131,7 +131,8 @@ public class MongoDBRuntimeTest extends TestCase {
 		assertTrue("Delete", files.executable().delete());
 	}
 
-	public void testCheck() throws IOException, InterruptedException {
+	@Test
+	public void testCheck() throws IOException {
 
 		Timer timer = new Timer();
 

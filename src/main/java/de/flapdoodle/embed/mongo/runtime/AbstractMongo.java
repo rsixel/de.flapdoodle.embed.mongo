@@ -20,28 +20,31 @@
  */
 package de.flapdoodle.embed.mongo.runtime;
 
-import java.util.List;
-
 import de.flapdoodle.embed.mongo.config.IMongoConfig;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Feature;
+
+import java.util.List;
 
 
 public class AbstractMongo {
 
-	protected static <T extends IMongoConfig> void applyDefaultOptions(T config, List<String> ret) {
-		ret.add("--nohttpinterface");
-	}
+    protected static <T extends IMongoConfig> void applyDefaultOptions(T config, List<String> ret) {
+        if (!config.version().enabled(Feature.NO_HTTP_INTERFACE_ARG)) {
+            ret.add("--nohttpinterface");
+        }
+    }
 
-	protected static void applyNet(Net net, List<String> ret) {
-		ret.add("--port");
-		ret.add("" + net.getPort());
-		if (net.isIpv6()) {
-			ret.add("--ipv6");
-		}
-		if (net.getBindIp()!=null) {
-			ret.add("--bind_ip");
-			ret.add(net.getBindIp());
-		}
-	}
+    protected static void applyNet(Net net, List<String> ret) {
+        ret.add("--port");
+        ret.add("" + net.getPort());
+        if (net.isIpv6()) {
+            ret.add("--ipv6");
+        }
+        if (net.getBindIp() != null) {
+            ret.add("--bind_ip");
+            ret.add(net.getBindIp());
+        }
+    }
 
 }

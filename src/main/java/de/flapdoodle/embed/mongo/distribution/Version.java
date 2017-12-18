@@ -203,6 +203,9 @@ public enum Version implements IFeatureAwareVersion {
    * Latest 3 development release
    */
   V3_5_5("3.5.5", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE),
+  V3_6_0("3.6.0", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT),
+  LATEST_NIGHTLY("latest", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT),
+
 
   ;
 
@@ -261,11 +264,13 @@ public enum Version implements IFeatureAwareVersion {
 		V3_3(V3_3_1),
 		V3_4(V3_4_3),
 		V3_5(V3_5_5),
-        
+		V3_6(V3_6_0),
+
 		@Deprecated
 		LEGACY(V2_6),
-		PRODUCTION(V3_4),
-		DEVELOPMENT(V3_5), ;
+		PRODUCTION(V3_6),
+		DEVELOPMENT(LATEST_NIGHTLY),
+		;
 
 		private final IFeatureAwareVersion _latest;
 
