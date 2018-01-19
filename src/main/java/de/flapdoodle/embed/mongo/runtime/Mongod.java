@@ -172,7 +172,7 @@ public class Mongod extends AbstractMongo {
 		}
 
 		applyDefaultOptions(config, ret);
-		applyNet(config.net(), ret);
+		applyNet(config, ret);
 
 		Storage replication = config.replication();
 		

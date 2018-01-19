@@ -47,7 +47,7 @@ public class Mongos extends AbstractMongo {
 			ret.add("-v");
 		}
 		applyDefaultOptions(config, ret);
-		applyNet(config.net(),ret);
+		applyNet(config,ret);
 		
 		if (config.getConfigDB()!=null) {
 			ret.add("--configdb");

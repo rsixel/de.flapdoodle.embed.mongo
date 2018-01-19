@@ -25,9 +25,10 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Feature;
 
 import java.util.List;
+import java.util.Objects;
 
 
-public class AbstractMongo {
+public abstract class AbstractMongo {
 
     protected static <T extends IMongoConfig> void applyDefaultOptions(T config, List<String> ret) {
         if (!config.version().enabled(Feature.NO_HTTP_INTERFACE_ARG)) {
@@ -35,7 +36,9 @@ public class AbstractMongo {
         }
     }
 
-    protected static void applyNet(Net net, List<String> ret) {
+    protected static <T extends IMongoConfig> void applyNet(T config, List<String> ret) {
+        Net net = config.net();
+
         ret.add("--port");
         ret.add("" + net.getPort());
         if (net.isIpv6()) {
@@ -43,7 +46,12 @@ public class AbstractMongo {
         }
         if (net.getBindIp() != null) {
             ret.add("--bind_ip");
-            ret.add(net.getBindIp());
+            if (Objects.equals("localhost", net.getBindIp())
+                    && config.version().enabled(Feature.NO_BIND_IP_TO_LOCALHOST)) {
+                ret.add("127.0.0.1");
+            } else {
+                ret.add(net.getBindIp());
+            }
         }
     }
 
