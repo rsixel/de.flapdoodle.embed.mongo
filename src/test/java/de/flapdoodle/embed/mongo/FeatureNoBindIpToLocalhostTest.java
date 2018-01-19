@@ -77,7 +77,7 @@ public class FeatureNoBindIpToLocalhostTest {
     private static IMongodConfig createMongoConfig() {
         try {
             return new MongodConfigBuilder()
-                    .version(Version.V3_6_0)
+                    .version(Version.Main.V3_6)
                     .net(new Net("localhost",
                             27017,
                             Network.localhostIsIPv6()))
