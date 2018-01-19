@@ -49,9 +49,9 @@ import junit.framework.TestCase;
  * @author m.joehren
  */
 //CHECKSTYLE:OFF
-public class MongoExecutableTest extends TestCase {
+public class MongoExecutableTest {
 
-	private static final Logger _logger = LoggerFactory.getLogger(MongoExecutableTest.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(MongoExecutableTest.class.getName());
 
 	@Test
 	public void testStartStopTenTimesWithNewMongoExecutable() throws IOException {
@@ -63,19 +63,17 @@ public class MongoExecutableTest extends TestCase {
 		IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder().defaults(Command.MongoD).build();
 
 		for (int i = 0; i < loops; i++) {
-			_logger.info("Loop: {}", i);
+			logger.info("Loop: {}", i);
 			MongodExecutable mongodExe = MongodStarter.getInstance(runtimeConfig).prepare(mongodConfig);
 			try {
 				MongodProcess mongod = mongodExe.start();
 
-				if (useMongodb) {
-					try (MongoClient mongo = new MongoClient(
-							new ServerAddress(mongodConfig.net().getServerAddress(), mongodConfig.net().getPort()))) {
-						DB db = mongo.getDB("test");
-						DBCollection col = db.createCollection("testCol", new BasicDBObject());
-						col.save(new BasicDBObject("testDoc", new Date()));
-					}
-				}
+				try (MongoClient mongo = new MongoClient(
+                        new ServerAddress(mongodConfig.net().getServerAddress(), mongodConfig.net().getPort()))) {
+                    DB db = mongo.getDB("test");
+                    DBCollection col = db.createCollection("testCol", new BasicDBObject());
+                    col.save(new BasicDBObject("testDoc", new Date()));
+                }
 
 				mongod.stop();
 			} finally {
