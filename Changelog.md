@@ -1,6 +1,14 @@
 ### Changelog
 
-#### 2.0.1 (SNAPSHOT)
+
+#### 2.0.2 (SNAPSHOT)
+
+#### 2.0.1 
+
+- mongodb 3.6
+- mongodb nightly builds
+- `--shardsvr`did not get honored when starting mongod, thanks to https://github.com/faizan-talena
+
 
 #### 2.0.0
 
