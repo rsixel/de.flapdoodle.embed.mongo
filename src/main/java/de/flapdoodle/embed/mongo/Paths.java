@@ -44,21 +44,23 @@ public class Paths implements IPackageResolver {
 
 	@Override
 	public FileSet getFileSet(Distribution distribution) {
-		String executableFileName;
+        FileSet.Builder builder = FileSet.builder();
 		switch (distribution.getPlatform()) {
 			case Linux:
 			case OS_X:
 			case Solaris:
 			case FreeBSD:
-				executableFileName = command.commandName();
+                builder.addEntry(FileType.Executable, command.commandName());
 				break;
 			case Windows:
-				executableFileName = command.commandName()+".exe";
+                builder.addEntry(FileType.Executable, command.commandName()+".exe");
+                builder.addEntry(FileType.Library, "ssleay32.dll");
+                builder.addEntry(FileType.Library, "libeay32.dll");
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
 		}
-		return FileSet.builder().addEntry(FileType.Executable, executableFileName).build();
+        return builder.build();
 	}
 
 	//CHECKSTYLE:OFF

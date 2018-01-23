@@ -27,12 +27,20 @@ import de.flapdoodle.embed.process.io.directories.PropertyOrPlatformTempDir;
 import de.flapdoodle.embed.process.io.directories.UserHome;
 import de.flapdoodle.embed.process.store.Downloader;
 
+import java.io.File;
+import java.util.UUID;
+
 public class ExtractedArtifactStoreBuilder extends de.flapdoodle.embed.process.store.ExtractedArtifactStoreBuilder {
 
 	public ExtractedArtifactStoreBuilder defaults(Command command) {
 		extractDir().setDefault(new UserHome(".embedmongo/extracted"));
 		extractExecutableNaming().setDefault(new NoopTempNaming());
-		tempDir().setDefault(new PropertyOrPlatformTempDir());
+		tempDir().setDefault(new PropertyOrPlatformTempDir() {
+			@Override
+			public File asFile() {
+				return new File(super.asFile(), UUID.randomUUID().toString());
+			}
+		});
 		executableNaming().setDefault(new UUIDTempNaming());
 		download().setDefault(new DownloadConfigBuilder().defaultsForCommand(command).build());
 		downloader().setDefault(new Downloader());
