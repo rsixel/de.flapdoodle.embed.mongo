@@ -19,7 +19,7 @@ install:
   - cmd: mvn --version
   - cmd: java -version
 build_script:
-  - mvn test -Dtest=WindowsDllTest
+  - mvn test -Dtest=MongoExecutableTest
 cache:
   - C:\maven\ -> appveyor.yml
   - C:\Users\appveyor\.m2\ -> pom.xml
