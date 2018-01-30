@@ -12,7 +12,7 @@ addons:
 script: $TARGET
 jdk:
 - oraclejdk8
-  oraclejdk9
+- oraclejdk9
 
 env:
   matrix:
