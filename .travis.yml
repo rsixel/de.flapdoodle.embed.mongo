@@ -22,6 +22,7 @@ notifications:
   email:
     - michael@mosmann.de
     - m.joehren@gmail.com
+    - schaum@kaffeekrone.de
 
 cache:
   directories:
