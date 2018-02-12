@@ -1,6 +1,9 @@
-# Organisation Flapdoodle OSS
+# Organization Flapdoodle OSS
+[![Build Status](https://travis-ci.org/flapdoodle-oss/de.flapdoodle.embed.mongo.svg?branch=master)](https://travis-ci.org/flapdoodle-oss/de.flapdoodle.embed.mongo)
+[![Maven Central](https://img.shields.io/maven-central/v/de.flapdoodle.embed/de.flapdoodle.embed.mongo.svg)](https://maven-badges.herokuapp.com/maven-central/de.flapdoodle.embed/de.flapdoodle.embed.mongo)
 
-We are now a github organisation. You are invited to participate. :)
+We are now a github organization. You are invited to participate. 
+Starting with version 2 we are going to support only java 8 or higher. If you are looking for the older version you can find it in the 1.7 branch.
 
 # Embedded MongoDB
 
@@ -12,6 +15,14 @@ Embedded MongoDB will provide a platform neutral way for running mongodb in unit
 - its easy, much easier as installing right version by hand
 - you can change version per test
 
+## License
+
+We use http://www.apache.org/licenses/LICENSE-2.0
+
+## We need your help?
+
+Poll: [Which MongoDB version should stay supported?](https://docs.google.com/forms/d/1Iu8Gy4W0dPfwsE2czoPJAGtYijjmfcZISgb7pU-dZ9U/viewform?usp=send_form)
+
 ## Dependencies
 
 ### Build on top of
@@ -20,191 +31,79 @@ Embedded MongoDB will provide a platform neutral way for running mongodb in unit
 
 ### Other ways to use Embedded MongoDB
 
-- In a Maven build using [embedmongo-maven-plugin](https://github.com/joelittlejohn/embedmongo-maven-plugin)
-- In a Clojure/Leiningen project using [lein-embongo](https://github.com/joelittlejohn/lein-embongo)
-- In a Scala/specs2 specification using [specs2-embedmongo](https://github.com/athieriot/specs2-embedmongo)
+- in a Maven build using [maven-mongodb-plugin](https://github.com/Syncleus/maven-mongodb-plugin) or [embedmongo-maven-plugin](https://github.com/joelittlejohn/embedmongo-maven-plugin)
+- in a Clojure/Leiningen project using [lein-embongo](https://github.com/joelittlejohn/lein-embongo)
+- in a Gradle build using [gradle-mongo-plugin](https://github.com/sourcemuse/GradleMongoPlugin)
+- in a Scala/specs2 specification using [specs2-embedmongo](https://github.com/athieriot/specs2-embedmongo)
+- in Scala tests using [scalatest-embedmongo](https://github.com/SimplyScala/scalatest-embedmongo)
 
 ### Comments about Embedded MongoDB in the Wild
 
-http://stackoverflow.com/questions/6437226/embedded-mongodb-when-running-integration-tests
-http://www.cubeia.com/index.php/blog/archives/436
+- http://stackoverflow.com/questions/6437226/embedded-mongodb-when-running-integration-tests
+- http://www.cubeia.com/index.php/blog/archives/436
+- http://blog.diabol.se/?p=390
 
 ### Other MongoDB Stuff
 
 - https://github.com/thiloplanz/jmockmongo - mongodb mocking
 - https://github.com/lordofthejars/nosql-unit - extended nosql unit testing
+- https://github.com/jirutka/embedmongo-spring - Spring Factory Bean for EmbedMongo
 
 ## Howto
 
 ### Maven
-
-**IMPORTANT NOTE: maven groupId and artifactId change**
-
-*	groupId from __de.flapdoodle.embedmongo__ to __de.flapdoodle.embed__
-*	artifactId from __de.flapdoodle.embedmongo__ to __de.flapdoodle.embed.mongo__
-
-Stable (Maven Central Repository, Released: 16.12.2012 - wait 24hrs for [maven central](http://repo1.maven.org/maven2/de/flapdoodle/embed/de.flapdoodle.embed.mongo/maven-metadata.xml))
-
-	<dependency>
-		<groupId>de.flapdoodle.embed</groupId>
-		<artifactId>de.flapdoodle.embed.mongo</artifactId>
-		<version>1.28</version>
-	</dependency>
 
 Snapshots (Repository http://oss.sonatype.org/content/repositories/snapshots)
 
 	<dependency>
 		<groupId>de.flapdoodle.embed</groupId>
 		<artifactId>de.flapdoodle.embed.mongo</artifactId>
-		<version>1.29-SNAPSHOT</version>
+		<version>2.0.2-SNAPSHOT</version>
 	</dependency>
 
+### Gradle
+
+Make sure you have mavenCentral() in your repositories or that your enterprise/local server proxies the maven central repository.
+
+	dependencies {
+		testCompile group: "de.flapdoodle.embed", name: "de.flapdoodle.embed.mongo", version: "2.0.1"
+	}
 
 ### Build from source
 
-When you fork or clone our branch you should always be able to build the library by running 
+When you fork or clone our branch you should always be able to build the library by running
 
 	mvn package
 
-There is also a build.gradle file available which might sometimes be outdated but we try to keep it working. So the gradle command is
-
-	gradle build
-
-Or if you want to use the gradle wrapper:
-
-	./gradlew build
- 
-
 ### Changelog
 
-#### 1.29 (SNAPSHOT)
-
-
-
-#### 1.28
-
-- mongod config refactor
-- configurable startup timeout
-- added windows2008 support
-
-#### 1.27
-
-- dep version change
-
-#### 1.26
-
-- bind_ip configuration parameter support (MongodConfig constructor)
-
-#### 1.25
-
-- dep version change
-
-#### 1.24
-
-- dep version change
-
-#### 1.23
-
-- added 2.0.7, 2.2.0
-- mongodb java driver update to 2.9.0 (test dependency)
-
-#### 1.22
-
-- maven dep version range does not work as expected -> disabled
-
-#### 1.21
-
-- dependency version range for de.flapdoodle.embed.process
-
-#### 1.20
-
-- NPE fix with custom database directory
-- custom database directory will not be deleted
-
-#### 1.19
-
-- **massive refactoring, some api breaks**
-- **project split**
-- some relevant process.stop() improvements
-
-#### 1.18
-
-- added some unit test support (thanx to trajano)
-- added some logging only runtime config option
-- added 2.0.7-rc1, 2.2.0-rc0
-- command line post processor hock
-
-#### 1.17
-
-- added version 2.0.6 and 2.1.2
-- version refactoring
-- you can now have a custom version, so you do not depend on a new release of this project
-
-#### 1.16
-
-- added version 2.0.5 (main version 2.0 now points to it)
-- changed http user agent
-- customizeable mongod process output 
-- better loopback device detection for mongod process shutdown via command
-
-#### 1.15
-
-- now we send ctrl+c on linux and osx, then send shutdown to server, then taskkill on windows (may the force be with us)
-- disable journal for faster turnaround times
-- noauth added
-- customize artifact storage path
-- detection if localhost is not loopback (command shutdown on mongod does not work for remote access)
-- formated process output
-- much better windows support
-
-#### 1.14
-
-- changed back to send ctrl+c and then send shutdown
-
-#### 1.13
-
-- mongod process management improvement 
- (windows mongod shutdown improvement (alpha) (some trouble stopping process on windows - http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4770092))
- - send shutdown to server
- - send ctrl+c to mongod will perform clean shutdown (untested on windows using taskkill)
-- now with 2.1.1
-
-#### 1.12
-
-- NUMA support (alpha) - http://www.mongodb.org/display/DOCS/NUMA
-
-#### 1.11
-
-- timeout fix on slow systems
-- stability on win plattforms (hopefully)
-
-#### 1.10
-
-- race condition and cleanup of mongod process
-
-#### 1.9
-
-- fixed 64Bit detection - amd64
-- now with main versions 1.6, 1.8, 2.0, 2.1
+[Changelog](Changelog.md)
 
 ### Supported Versions
 
-Versions: some older, 1.8.5, 1.9.0, 2.0.6, 2.1.2
+Versions: some older, a stable and a development version
 Support for Linux, Windows and MacOSX.
 
 ### Usage
+```java
+	import de.flapdoodle.embed.mongo.config.ArtifactStoreBuilder;
 
+	...
+	MongodStarter starter = MongodStarter.getDefaultInstance();
+
+	String bindIp = "localhost";
 	int port = 12345;
-	MongodConfig mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6());
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+		.version(Version.Main.PRODUCTION)
+		.net(new Net(bindIp, port, Network.localhostIsIPv6()))
+		.build();
 
-	MongodStarter runtime = MongodStarter.getDefaultInstance();
-
-	MongodExecutable mongodExecutable = null; 
+	MongodExecutable mongodExecutable = null;
 	try {
-		mongodExecutable = runtime.prepare(mongodConfig);
+		mongodExecutable = starter.prepare(mongodConfig);
 		MongodProcess mongod = mongodExecutable.start();
 
-		Mongo mongo = new Mongo("localhost", port);
+		MongoClient mongo = new MongoClient(bindIp, port);
 		DB db = mongo.getDB("test");
 		DBCollection col = db.createCollection("testCol", new BasicDBObject());
 		col.save(new BasicDBObject("testDoc", new Date()));
@@ -213,22 +112,51 @@ Support for Linux, Windows and MacOSX.
 		if (mongodExecutable != null)
 			mongodExecutable.stop();
 	}
+```
 
-### Usage - custom mongod filename 
+### Usage - Optimization
+
+You should make the MongodStarter instance or the RuntimeConfig instance static (per Class or per JVM).
+The main purpose of that is the caching of extracted executables and library files. This is done by the ArtifactStore instance
+configured with the RuntimeConfig instance. Each instance uses its own cache so multiple RuntimeConfig instances will use multiple
+ArtifactStores an multiple caches with much less cache hits:)  
+
+### Usage - custom mongod filename
+
+If you do not restrict `bindId` to `localhost` you get windows firewall dialog popups.
+To avoid them you can choose a stable executable name with UserTempNaming.
+This way the firewall dialog only popups once. See [Executable Collision](#executable-collision)
+```java
+	import de.flapdoodle.embed.mongo.config.ExtractedArtifactStoreBuilder;
+
+	...
 
 	int port = 12345;
-	MongodConfig mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6());
 
-	RuntimeConfig runtimeConfig = new RuntimeConfig();
-	runtimeConfig.setExecutableNaming(new UserTempNaming());
+	Command command = Command.MongoD;
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(command)
+		.artifactStore(new ExtractedArtifactStoreBuilder()
+			.defaults(command)
+			.download(new DownloadConfigBuilder()
+					.defaultsForCommand(command).build())
+			.executableNaming(new UserTempNaming()))
+		.build();
+
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+		.version(Version.Main.PRODUCTION)
+		.net(new Net(port, Network.localhostIsIPv6()))
+		.build();
+
 	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
 
-	MongodExecutable mongodExecutable=null;
+	MongodExecutable mongodExecutable = null;
 	try {
 		mongodExecutable = runtime.prepare(mongodConfig);
 		MongodProcess mongod = mongodExecutable.start();
 
-		Mongo mongo = new Mongo("localhost", port);
+		MongoClient mongo = new MongoClient("localhost", port);
 		DB db = mongo.getDB("test");
 		DBCollection col = db.createCollection("testCol", new BasicDBObject());
 		col.save(new BasicDBObject("testDoc", new Date()));
@@ -237,25 +165,34 @@ Support for Linux, Windows and MacOSX.
 		if (mongodExecutable != null)
 			mongodExecutable.stop();
 	}
+```
 
 ### Unit Tests
-
+```java
 	public abstract class AbstractMongoDBTest extends TestCase {
+
+		/**
+		 * please store Starter or RuntimeConfig in a static final field
+		 * if you want to use artifact store caching (or else disable caching)
+		 */
+		private static final MongodStarter starter = MongodStarter.getDefaultInstance();
 
 		private MongodExecutable _mongodExe;
 		private MongodProcess _mongod;
 
-		private Mongo _mongo;
+		private MongoClient _mongo;
 		@Override
 		protected void setUp() throws Exception {
 
-			MongodStarter runtime = MongodStarter.getDefaultInstance();
-			_mongodExe = runtime.prepare(new MongodConfig(Version.Main.V2_0, 12345, Network.localhostIsIPv6()));
+			_mongodExe = starter.prepare(new MongodConfigBuilder()
+				.version(Version.Main.PRODUCTION)
+				.net(new Net("localhost", 12345, Network.localhostIsIPv6()))
+				.build());
 			_mongod = _mongodExe.start();
 
 			super.setUp();
 
-			_mongo = new Mongo("localhost", 12345);
+			_mongo = new MongoClient("localhost", 12345);
 		}
 
 		@Override
@@ -271,15 +208,16 @@ Support for Linux, Windows and MacOSX.
 		}
 
 	}
-	
-#### ... with some more help
+```
 
+#### ... with some more help
+```java
 	...
 	MongodForTestsFactory factory = null;
 	try {
-		factory = MongodForTestsFactory.with(Version.Main.V2_0);
+		factory = MongodForTestsFactory.with(Version.Main.PRODUCTION);
 
-		Mongo mongo = factory.newMongo();
+		MongoClient mongo = factory.newMongo();
 		DB db = mongo.getDB("test-" + UUID.randomUUID());
 		DBCollection col = db.createCollection("testCol", new BasicDBObject());
 		col.save(new BasicDBObject("testDoc", new Date()));
@@ -289,53 +227,105 @@ Support for Linux, Windows and MacOSX.
 			factory.shutdown();
 	}
 	...
+```
 
+### Customize Download URL
+```java
+	...
+	Command command = Command.MongoD;
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(command)
+		.artifactStore(new ExtractedArtifactStoreBuilder()
+			.defaults(command)
+			.download(new DownloadConfigBuilder()
+				.defaultsForCommand(command)
+				.downloadPath("http://my.custom.download.domain/")))
+		.build();
+	...
+```
+
+### Customize Proxy for Download
+```java
+	...
+	Command command = Command.MongoD;
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(command)
+		.artifactStore(new ExtractedArtifactStoreBuilder()
+			.defaults(command)
+			.download(new DownloadConfigBuilder()
+				.defaultsForCommand(command)
+				.proxyFactory(new HttpProxyFactory("fooo", 1234))))
+			.build();
+	...
+```
 
 ### Customize Artifact Storage
-
+```java
 	...
-	IArtifactStoragePathNaming artifactStorePath = ...
-	ITempNaming executableNaming = ...
-		
-	RuntimeConfig runtimeConfig = new RuntimeConfig();
-	runtimeConfig.getDownloadConfig().setArtifactStorePathNaming(artifactStorePath);
-	runtimeConfig.setExecutableNaming(executableNaming);
+	IDirectory artifactStorePath = new FixedPath(System.getProperty("user.home") + "/.embeddedMongodbCustomPath");
+	ITempNaming executableNaming = new UUIDTempNaming();
+
+	Command command = Command.MongoD;
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(command)
+		.artifactStore(new ExtractedArtifactStoreBuilder()
+			.defaults(command)
+			.download(new DownloadConfigBuilder()
+				.defaultsForCommand(command)
+				.artifactStorePath(artifactStorePath))
+			.executableNaming(executableNaming))
+		.build();
 
 	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
 	MongodExecutable mongodExe = runtime.prepare(mongodConfig);
 	...
+```
 
-### Usage - custom mongod process output 
+### Usage - custom mongod process output
 
 #### ... to console with line prefix
+```java
 	...
-	RuntimeConfig runtimeConfig = new RuntimeConfig();
-	runtimeConfig.setProcessOutput(new ProcessOutput(Processors.namedConsole("[mongod>]"),
-		Processors.namedConsole("[MONGOD>]"), Processors.namedConsole("[console>]")));
+	ProcessOutput processOutput = new ProcessOutput(Processors.namedConsole("[mongod>]"),
+			Processors.namedConsole("[MONGOD>]"), Processors.namedConsole("[console>]"));
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(Command.MongoD)
+		.processOutput(processOutput)
+		.build();
+
+	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
+	...
+```
+
+#### ... to file
+```java
+	...
+	IStreamProcessor mongodOutput = Processors.named("[mongod>]",
+			new FileStreamProcessor(File.createTempFile("mongod", "log")));
+	IStreamProcessor mongodError = new FileStreamProcessor(File.createTempFile("mongod-error", "log"));
+	IStreamProcessor commandsOutput = Processors.namedConsole("[console>]");
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(Command.MongoD)
+		.processOutput(new ProcessOutput(mongodOutput, mongodError, commandsOutput))
+		.build();
+
 	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
 	...
 
-#### ... to file
-	...
-	RuntimeConfig runtimeConfig=new RuntimeConfig();
-	IStreamProcessor mongodOutput = Processors.named("[mongod>]", new FileStreamProcessor(File.createTempFile("mongod", "log")));
-	IStreamProcessor mongodError = new FileStreamProcessor(File.createTempFile("mongod-error", "log"));
-	IStreamProcessor commandsOutput = Processors.namedConsole("[console>]");
-		
-	runtimeConfig.setProcessOutput(new ProcessOutput(mongodOutput,
-		mongodError, commandsOutput));
-	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
-	...
-	
 	...
 	public class FileStreamProcessor implements IStreamProcessor {
-	
+
 		private FileOutputStream outputStream;
 
 		public FileStreamProcessor(File file) throws FileNotFoundException {
 			outputStream = new FileOutputStream(file);
 		}
-		
+
 		@Override
 		public void process(String block) {
 			try {
@@ -352,92 +342,302 @@ Support for Linux, Windows and MacOSX.
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}	
+		}
 	}
 	...
-	
-#### ... to java logging
-	...
-	Logger logger=...
-	
-	RuntimeConfig runtimeConfig = new RuntimeConfig();
-	runtimeConfig.setProcessOutput(new ProcessOutput(Processors.logTo(logger, Level.INFO),
-			Processors.logTo(logger, Level.SEVERE), Processors.named("[console>]",Processors.logTo(logger, Level.FINE))));
-	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
-	...
+```
 
-#### ... to default java logging (the easy way)	
+#### ... to java logging
+```java
 	...
-	
-	Logger logger=...
-	
-	RuntimeConfig runtimeConfig = RuntimeConfig.getInstance(logger);
+	Logger logger = Logger.getLogger(getClass().getName());
+
+	ProcessOutput processOutput = new ProcessOutput(Processors.logTo(logger, Level.INFO), Processors.logTo(logger,
+			Level.SEVERE), Processors.named("[console>]", Processors.logTo(logger, Level.FINE)));
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaultsWithLogger(Command.MongoD,logger)
+		.processOutput(processOutput)
+		.artifactStore(new ExtractedArtifactStoreBuilder()
+			.defaults(Command.MongoD)
+			.download(new DownloadConfigBuilder()
+				.defaultsForCommand(Command.MongoD)
+				.progressListener(new LoggingProgressListener(logger, Level.FINE))))
+		.build();
+
 	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
 	...
+```
+
+#### ... to default java logging (the easy way)
+```java
+	...
+	Logger logger = Logger.getLogger(getClass().getName());
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaultsWithLogger(Command.MongoD, logger)
+		.build();
+
+	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
+	...
+```
+
+#### ... to null device
+```java
+	...
+	Logger logger = Logger.getLogger(getClass().getName());
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaultsWithLogger(Command.MongoD, logger)
+		.processOutput(ProcessOutput.getDefaultInstanceSilent())
+		.build();
+
+	MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
+	...
+```
 
 ### Custom Version
-
+```java
 	...
 	int port = 12345;
-	MongodProcess mongod = null;
-	MongodConfig mongodConfig = new MongodConfig(new GenericVersion("2.0.7-rc1"), port, Network.localhostIsIPv6());
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+		.version(Versions.withFeatures(new GenericVersion("2.0.7-rc1"),Feature.SYNC_DELAY))
+		.net(new Net(port, Network.localhostIsIPv6()))
+		.build();
 
 	MongodStarter runtime = MongodStarter.getDefaultInstance();
+	MongodProcess mongod = null;
 
+	MongodExecutable mongodExecutable = null;
 	try {
-		MongodExecutable mongodExecutable = runtime.prepare(mongodConfig);
+		mongodExecutable = runtime.prepare(mongodConfig);
 		mongod = mongodExecutable.start();
 
 		...
-		
+
 	} finally {
-		if (mongod != null)
+		if (mongod != null) {
 			mongod.stop();
+		}
+		if (mongodExecutable != null)
+			mongodExecutable.stop();
 	}
 	...
-### Main Versions
-	...
-	IVersion version=Version.V2_0_1;
-	// uses latest supported 2.1.x Version
-	version=Version.Main.V2_1;
-	// uses latest supported production version
-	version=Version.Main.PRODUCTION;
-	// uses latest supported development version
-	version=Version.Main.DEVELOPMENT;
+```
 
+### Main Versions
+```java
+	IVersion version = Version.V2_2_5;
+	// uses latest supported 2.2.x Version
+	version = Version.Main.V2_2;
+	// uses latest supported production version
+	version = Version.Main.PRODUCTION;
+	// uses latest supported development version
+	version = Version.Main.DEVELOPMENT;
+```
 
 ### Use Free Server Port
 
 	Warning: maybe not as stable, as expected.
 
 #### ... by hand
+```java
 	...
 	int port = Network.getFreeServerPort();
 	...
-	
+```
+
 #### ... automagic
+```java
 	...
-	MongodProcess mongod = null;
-	MongodConfig mongodConfig = new MongodConfig(Version.Main.V2_0);
+	IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.PRODUCTION).build();
 
 	MongodStarter runtime = MongodStarter.getDefaultInstance();
 
+	MongodExecutable mongodExecutable = null;
+	MongodProcess mongod = null;
 	try {
-		MongodExecutable mongodExecutable = runtime.prepare(mongodConfig);
+		mongodExecutable = runtime.prepare(mongodConfig);
 		mongod = mongodExecutable.start();
 
-		Mongo mongo = new Mongo(new ServerAddress(mongodConfig.net().getServerAddress(), mongodConfig.net().getPort()));
+		MongoClient mongo = new MongoClient(new ServerAddress(mongodConfig.net().getServerAddress(), mongodConfig.net().getPort()));
+		...
+
+	} finally {
+		if (mongod != null) {
+			mongod.stop();
+		}
+		if (mongodExecutable != null)
+			mongodExecutable.stop();
 	}
 	...
+```
+
+### ... custom timeouts
+```java
+	...
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+		.version(Version.Main.PRODUCTION)
+		.timeout(new Timeout(30000))
+		.build();
+	...
+```
 
 ### Command Line Post Processing
+```java
 	...
-	ICommandLinePostProcessor postProcessort=...
-	
-	RuntimeConfig runtimeConfig = new RuntimeConfig();
-	runtimeConfig.setsetCommandLinePostProcessor(postProcessor);
+	ICommandLinePostProcessor postProcessor= ...
+
+	IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		.defaults(Command.MongoD)
+		.commandLinePostProcessor(postProcessor)
+		.build();
 	...
+```
+### Custom Command Line Options
 
+We changed the syncDelay to 0 which turns off sync to disc. To turn on default value used defaultSyncDelay().
+```java
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+	.version(Version.Main.PRODUCTION)
+	.cmdOptions(new MongoCmdOptionsBuilder()
+		.syncDelay(10)
+		.useNoPrealloc(false)
+		.useSmallFiles(false)
+		.useNoJournal(false)
+		.enableTextSearch(true)
+		.build())
+	.build();
+	...
+```
 
+### Snapshot database files from temp dir
 
+We changed the syncDelay to 0 which turns off sync to disc. To get the files to create an snapshot you must turn on default value (use defaultSyncDelay()).
+```java
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+	.version(Version.Main.PRODUCTION)
+	.processListener(new ProcessListenerBuilder()
+		.copyDbFilesBeforeStopInto(destination)
+		.build())
+	.cmdOptions(new MongoCmdOptionsBuilder()
+		.defaultSyncDelay()
+		.build())
+	.build();
+	...
+```
 
+### Custom database directory  
+
+If you set a custom database directory, it will not be deleted after shutdown
+```java
+	Storage replication = new Storage("/custom/databaseDir",null,0);
+
+	IMongodConfig mongodConfig = new MongodConfigBuilder()
+			.version(Version.Main.PRODUCTION)
+			.replication(replication)
+			.build();
+	...
+```
+
+### Start mongos with mongod instance
+
+this is an very easy example to use mongos and mongod
+```java
+	int port = 12121;
+	int defaultConfigPort = 12345;
+	String defaultHost = "localhost";
+
+	MongodProcess mongod = startMongod(defaultConfigPort);
+
+	try {
+		MongosProcess mongos = startMongos(port, defaultConfigPort, defaultHost);
+		try {
+			MongoClient mongoClient = new MongoClient(defaultHost, defaultConfigPort);
+			System.out.println("DB Names: " + mongoClient.getDatabaseNames());
+		} finally {
+			mongos.stop();
+		}
+	} finally {
+		mongod.stop();
+	}
+
+	private MongosProcess startMongos(int port, int defaultConfigPort, String defaultHost) throws UnknownHostException,
+			IOException {
+		IMongosConfig mongosConfig = new MongosConfigBuilder()
+			.version(Version.Main.PRODUCTION)
+			.net(new Net(port, Network.localhostIsIPv6()))
+			.configDB(defaultHost + ":" + defaultConfigPort)
+			.build();
+
+		MongosExecutable mongosExecutable = MongosStarter.getDefaultInstance().prepare(mongosConfig);
+		MongosProcess mongos = mongosExecutable.start();
+		return mongos;
+	}
+
+	private MongodProcess startMongod(int defaultConfigPort) throws UnknownHostException, IOException {
+		IMongodConfig mongoConfigConfig = new MongodConfigBuilder()
+			.version(Version.Main.PRODUCTION)
+			.net(new Net(defaultConfigPort, Network.localhostIsIPv6()))
+			.configServer(true)
+			.build();
+
+		MongodExecutable mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongoConfigConfig);
+		MongodProcess mongod = mongodExecutable.start();
+		return mongod;
+	}
+```
+
+### Import JSON file with mongoimport command
+```java
+    public void testStartAndStopMongoImportAndMongod() throws UnknownHostException, IOException {
+        int defaultConfigPort = 12345;
+        String defaultHost = "localhost";
+        String database = "importTestDB";
+        String collection = "importedCollection";
+        String jsonFile=filePathAsString;
+        MongodProcess mongod = startMongod(defaultConfigPort);
+
+        try {
+            MongoImportProcess mongoImport = startMongoImport(defaultHost, defaultConfigPort, database,collection,jsonFile,true,true,true);
+            try {
+                MongoClient mongoClient = new MongoClient(defaultHost, defaultConfigPort);
+                System.out.println("DB Names: " + mongoClient.getDatabaseNames());
+            } finally {
+                mongoImport.stop();
+            }
+        } finally {
+            mongod.stop();
+        }
+    }
+
+    private MongoImportProcess startMongoImport(String bindIp, int port, String dbName, String collection, String jsonFile, Boolean jsonArray,Boolean upsert, Boolean drop)
+            throws UnknownHostException, IOException {
+        IMongoImportConfig mongoImportConfig = new MongoImportConfigBuilder()
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(bindIp, port, Network.localhostIsIPv6()))
+                .db(dbName)
+                .collection(collection)
+                .upsert(upsert)
+                .dropCollection(drop)
+                .jsonArray(jsonArray)
+                .importFile(jsonFile)
+                .build();
+
+        MongoImportExecutable mongoImportExecutable = MongoImportStarter.getDefaultInstance().prepare(mongoImportConfig);
+        MongoImportProcess mongoImport = mongoImportExecutable.start();
+        return mongoImport;
+    }
+```
+
+### Executable Collision
+
+There is a good chance of filename collisions if you use a custom naming schema for the executable (see [Usage - custom mongod filename](#usage---custom-mongod-filename)). If you got an exception, then you should make your RuntimeConfig or MongoStarter class or jvm static (static final in your test class or singleton class for all tests).
+
+----
+
+YourKit is kindly supporting open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of innovative and intelligent tools for profiling
+Java and .NET applications. Take a look at YourKit's leading software products:
+<a href="http://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a> and
+<a href="http://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>.
