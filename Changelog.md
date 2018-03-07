@@ -1,7 +1,10 @@
 ### Changelog
 
+#### 2.0.4
+- mongodump with archive option
 
-#### 2.0.2 (SNAPSHOT)
+#### 2.0.2 & 2.0.3
+- jdk 9 compatibility issue thanks to https://github.com/flapdoodle-oss/de.flapdoodle.embed.process/pull/66
 
 #### 2.0.1 
 
