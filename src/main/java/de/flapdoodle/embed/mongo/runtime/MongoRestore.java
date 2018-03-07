@@ -104,7 +104,6 @@ public class MongoRestore extends AbstractMongo {
       if (config.isBypassDocumentValidation()) {
          ret.add("--bypassDocumentValidation");
       }
-      System.out.println("arguments = " + ret);
 
       return ret;
    }

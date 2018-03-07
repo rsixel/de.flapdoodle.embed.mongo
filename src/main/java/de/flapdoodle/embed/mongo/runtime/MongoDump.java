@@ -65,8 +65,7 @@ public class MongoDump extends AbstractMongo {
          ret.add("--forceTableScan");
       }
       if (config.getArchive() != null) {
-         ret.add("--archive");
-         ret.add(config.getArchive());
+         ret.add("--archive=" + config.getArchive());
       }
       if (config.isDumpDbUsersAndRoles()) {
          ret.add("--dumpDbUsersAndRoles");
@@ -96,7 +95,6 @@ public class MongoDump extends AbstractMongo {
          ret.add("--numParallelCollections");
          ret.add(config.getNumberOfParallelCollections().toString());
       }
-      System.out.println("MongoDump arguments: " + ret);
 
       return ret;
    }
