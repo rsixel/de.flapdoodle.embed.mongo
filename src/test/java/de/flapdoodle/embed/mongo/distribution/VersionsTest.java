@@ -20,6 +20,7 @@
  */
 package de.flapdoodle.embed.mongo.distribution;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -35,5 +36,14 @@ public class VersionsTest {
 		assertEquals(Versions.withFeatures(new GenericVersion("2.6.5"), Feature.TEXT_SEARCH), Versions.withFeatures(new GenericVersion("2.6.5"), Feature.TEXT_SEARCH));
 		assertNotEquals(Versions.withFeatures(new GenericVersion("2.6.5")), Versions.withFeatures(new GenericVersion("2.6.5"), Feature.TEXT_SEARCH));
 	}
+
+	@Test
+    public void toStringOfGenericVersion() {
+      String version = "9.6.9";
+      IFeatureAwareVersion iFeatureAwareVersion = Versions.withFeatures(new GenericVersion(version));
+
+      assertThat(iFeatureAwareVersion.toString()).contains(version);
+      assertThat(iFeatureAwareVersion.asInDownloadPath()).isEqualTo(version);
+    }
 
 }
