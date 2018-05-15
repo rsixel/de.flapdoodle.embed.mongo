@@ -340,10 +340,10 @@ public class HowToDocTest {
 
 	// #### ... to null device
 	@Test
-	public void testDefaultOutputToNone() throws FileNotFoundException, IOException {
+	public void testDefaultOutputToNone() throws IOException {
 		int port = 12345;
 		IMongodConfig mongodConfig = new MongodConfigBuilder()
-				.version(Versions.withFeatures(new GenericVersion("2.0.7-rc1"), Feature.SYNC_DELAY))
+				.version(Versions.withFeatures(new GenericVersion("2.7.1"), Feature.SYNC_DELAY))
 				.net(new Net(port, Network.localhostIsIPv6()))
 				.build();
 		// ->
@@ -384,13 +384,13 @@ public class HowToDocTest {
 
 	// ### Custom Version
 	@Test
-	public void testCustomVersion() throws UnknownHostException, IOException {
+	public void testCustomVersion() throws IOException {
 		// ->
 		// ...
 		recording.begin();
 		int port = 12345;
 		IMongodConfig mongodConfig = new MongodConfigBuilder()
-				.version(Versions.withFeatures(new GenericVersion("2.0.7-rc1"), Feature.SYNC_DELAY))
+				.version(Versions.withFeatures(new GenericVersion("2.7.1"), Feature.SYNC_DELAY))
 				.net(new Net(port, Network.localhostIsIPv6()))
 				.build();
 
