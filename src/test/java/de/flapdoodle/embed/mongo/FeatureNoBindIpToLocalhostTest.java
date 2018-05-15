@@ -20,10 +20,7 @@
  */
 package de.flapdoodle.embed.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
@@ -34,13 +31,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 
 public class FeatureNoBindIpToLocalhostTest {
 
     private static MongodStarter mongodStarter = MongodStarter.getDefaultInstance();
-    private static IMongodConfig mongodConfig = createMongoConfig();
+    private static Net net = getNet();
+    private static IMongodConfig mongodConfig = createMongoConfig(net);
 
     private MongodExecutable mongodExecutable;
     private MongodProcess mongodProcess;
@@ -67,24 +66,31 @@ public class FeatureNoBindIpToLocalhostTest {
     }
 
     @Test
-    public void testInsert() {
-        MongoClient mongo = new MongoClient();
+    public void testInsert() throws UnknownHostException {
+        MongoClient mongo = new MongoClient(new ServerAddress(net.getServerAddress(), net.getPort()));
         DB db = mongo.getDB("test");
         DBCollection col = db.createCollection("testCol", new BasicDBObject());
         col.save(new BasicDBObject("testDoc", new Date()));
     }
 
-    private static IMongodConfig createMongoConfig() {
+    private static IMongodConfig createMongoConfig(Net net) {
         try {
             return new MongodConfigBuilder()
                     .version(Version.V3_6_0)
-                    .net(new Net("localhost",
-                            27017,
-                            Network.localhostIsIPv6()))
+                    .net(net)
                     .build();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+    }
 
+    private static Net getNet() {
+        try {
+            return new Net("localhost",
+                    Network.getFreeServerPort(),
+                    Network.localhostIsIPv6());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
