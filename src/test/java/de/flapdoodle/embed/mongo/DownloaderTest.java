@@ -59,7 +59,6 @@ public class DownloaderTest {
 
 	@Rule
 	public TemporaryFolder tempDir = new TemporaryFolder();
-	private IRuntimeConfig rc;
 	private IDownloadConfig dc;
 	private IProgressListener pl;
 
@@ -87,7 +86,6 @@ public class DownloaderTest {
 			}
 			Thread.sleep(100);
 		}
-		rc = mock(IRuntimeConfig.class);
 		dc = mock(IDownloadConfig.class);
 		pl = mock(IProgressListener.class);
 	}

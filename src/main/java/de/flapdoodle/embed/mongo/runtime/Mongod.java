@@ -33,6 +33,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -215,7 +216,7 @@ public class Mongod extends AbstractMongo {
 	}
 
 	public static List<String> enhanceCommandLinePlattformSpecific(Distribution distribution, List<String> commands) {
-		if (NUMA.isNUMA(new SupportConfig(Command.MongoD), distribution.getPlatform())) {
+		if (NUMA.isNUMA(new SupportConfig(Command.MongoD, TimeUnit.SECONDS.toMillis(5)), distribution.getPlatform())) {
 			switch (distribution.getPlatform()) {
 			case Linux:
 				List<String> ret = new ArrayList<>();

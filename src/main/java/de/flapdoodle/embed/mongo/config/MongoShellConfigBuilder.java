@@ -89,6 +89,11 @@ public class MongoShellConfigBuilder extends AbstractMongoConfigBuilder<IMongoSh
 		return this;
 	}
 
+	public MongoShellConfigBuilder stopTimeoutInMillis(long timeout) {
+		stopTimeout().set(timeout);
+		return this;
+	}
+
 	@Override
 	public IMongoShellConfig build() {
 		IFeatureAwareVersion version = version().get();
@@ -102,9 +107,11 @@ public class MongoShellConfigBuilder extends AbstractMongoConfigBuilder<IMongoSh
 		if ((name==null) && (parameters.isEmpty())) {
 			throw new RuntimeException("you must set parameters or scriptName");
 		}
+		Long stopTimeoutInMillis = get(STOP_TIMEOUT_MILLIS);
+
 
 		return new ImmutableMongoShellConfig(version, net, timeout, cmdOptions, pidFile, name,
-					username().get(), password().get(), dbName().get(), parameters);
+					username().get(), password().get(), dbName().get(), stopTimeoutInMillis, parameters);
 	}
 
 	static class ImmutableMongoShellConfig extends ImmutableMongoConfig implements IMongoShellConfig {
@@ -114,10 +121,10 @@ public class MongoShellConfigBuilder extends AbstractMongoConfigBuilder<IMongoSh
 		private final List<String> _parameters;
 
 		public ImmutableMongoShellConfig(IFeatureAwareVersion version, Net net, Timeout timeout,
-											IMongoCmdOptions cmdOptions, String pidFile,
-											String scriptName, String username, String password, String dbName,
-											List<String> parameters) {
- 			super(new SupportConfig(Command.Mongo), version, net, username, password, timeout, cmdOptions, pidFile);
+										 IMongoCmdOptions cmdOptions, String pidFile,
+										 String scriptName, String username, String password, String dbName,
+										 Long stopTimeoutInMillis, List<String> parameters) {
+ 			super(new SupportConfig(Command.Mongo, stopTimeoutInMillis), version, net, username, password, timeout, cmdOptions, pidFile);
  			this._dbname = dbName;
 			this._name = scriptName;
 			this._parameters = Collections.unmodifiableList(new ArrayList<>(parameters));

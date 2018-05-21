@@ -79,7 +79,7 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
 		args.put(name, null);
 		return this;
 	}
-	
+
 	public MongodConfigBuilder withLaunchArgument(String name, String value) {
 		args.put(name, value);
 		return this;
@@ -110,6 +110,12 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
         return this;
     }
 
+
+    public MongodConfigBuilder stopTimeoutInMillis(long timeout) {
+        stopTimeout().set(timeout);
+        return this;
+    }
+
 	@Override
 	public IMongodConfig build() {
 		IFeatureAwareVersion version=version().get();
@@ -121,8 +127,9 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
 		IMongoCmdOptions cmdOptions=get(CMD_OPTIONS);
 		IMongoProcessListener processListener=get(PROCESS_LISTENER);
 		String pidFile=get(PID_FILE);
+		Long stopTimeoutInMillis = get(STOP_TIMEOUT_MILLIS);
 
-		return new ImmutableMongodConfig(version, net, timeout, cmdOptions, pidFile, replication, configServer, shardServer, processListener, params, args);
+		return new ImmutableMongodConfig(version, net, timeout, cmdOptions, pidFile, replication, configServer, shardServer, processListener, stopTimeoutInMillis, params, args);
 	}
 
 	static class ImmutableMongodConfig extends ImmutableMongoConfig implements IMongodConfig {
@@ -136,8 +143,8 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
 
 		public ImmutableMongodConfig(IFeatureAwareVersion version, Net net, Timeout timeout, IMongoCmdOptions cmdOptions,
 										String pidFile, Storage replication, boolean configServer,boolean shardServer,
-										IMongoProcessListener processListener, Map<String, String> params, Map<String, String> args) {
-			super(new SupportConfig(Command.MongoD), version, net, null, null, timeout, cmdOptions, pidFile);
+										IMongoProcessListener processListener, long stopTimeoutInMillis, Map<String, String> params, Map<String, String> args) {
+			super(new SupportConfig(Command.MongoD, stopTimeoutInMillis), version, net, null, null, timeout, cmdOptions, pidFile);
 			_replication = replication;
 			_configServer = configServer;
 			_shardServer = shardServer;
@@ -155,7 +162,7 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
 		public boolean isConfigServer() {
 			return _configServer;
 		}
-		
+
 		@Override
 		public boolean isShardServer() {
 			return _shardServer;
@@ -170,7 +177,7 @@ public class MongodConfigBuilder extends AbstractMongoConfigBuilder<IMongodConfi
 		public Map<String, String> params() {
 			return Collections.unmodifiableMap(_params);
 		}
-		
+
 		@Override
 		public Map<String, String> args() {
 			return Collections.unmodifiableMap(_args);

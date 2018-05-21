@@ -183,16 +183,23 @@ public class MongoRestoreConfigBuilder extends AbstractMongoConfigBuilder<IMongo
       return this;
    }
 
+   public MongoRestoreConfigBuilder stopTimeoutInMillis(long timeout) {
+      stopTimeout().set(timeout);
+      return this;
+   }
+
    @Override
    public IMongoRestoreConfig build() {
       Net net = net().get();
       Timeout timeout = timeout().get();
+     Long stopTimeoutInMillis = get(STOP_TIMEOUT_MILLIS);
 
-      return new ImmutableMongoRestoreConfig(get(VERSION, null), net, timeout, get(VERBOSE, false), get(PID_FILE),
+
+     return new ImmutableMongoRestoreConfig(get(VERSION, null), net, timeout, get(VERBOSE, false), get(PID_FILE),
          get(DB_NAME, null), get(COLLECTION, null), get(OBJECT_CHECK, false), get(OPLOG_REPLAY, false), get(OPLOG_LIMIT, null),
          get(ARCHIVE, null), get(RESTORE_DB_USERS_ROLES, false), get(DIR, null), get(GZIP, false), get(DROP, false), get(WRITE_CONCERN, null),
          get(NO_INDEX_RESTORE, false), get(NO_OPTIONS_RESTORE, false), get(KEEP_INDEX_VERSION, false), get(MAINTAIN_INSERTION_ORDER, false),
-         get(NUM_PARALLEL_COLLECTIONS, 4), get(NUM_INSERTION_WORKERS, 1), get(STOP_ON_ERROR, false), get(BYPASS_DOCUMENT_VALIDATION, false));
+         get(NUM_PARALLEL_COLLECTIONS, 4), get(NUM_INSERTION_WORKERS, 1), get(STOP_ON_ERROR, false), get(BYPASS_DOCUMENT_VALIDATION, false), stopTimeoutInMillis);
    }
 
    static class ImmutableMongoRestoreConfig extends ImmutableMongoConfig implements IMongoRestoreConfig {
@@ -222,8 +229,8 @@ public class MongoRestoreConfigBuilder extends AbstractMongoConfigBuilder<IMongo
                                          String archive, boolean restoreDbUsersAndRoles, String dir, boolean gzip, boolean drop,
                                          String writeConcern, boolean noIndexRestore, boolean noOptionsRestore, boolean keepIndexVersion,
                                          boolean maintainInsertionOrder, Integer numParallelCollections, Integer numInsertionWorkers, boolean stopOnError,
-                                         boolean bypassDocumentValidation) {
-         super(new SupportConfig(Command.MongoRestore), version, net, null, null, timeout, null, pidFile);
+                                         boolean bypassDocumentValidation, long stopTimeoutInMillis) {
+         super(new SupportConfig(Command.MongoRestore, stopTimeoutInMillis), version, net, null, null, timeout, null, pidFile);
          _verbose = verbose;
          _databaseName = database;
          _collectionName = collection;

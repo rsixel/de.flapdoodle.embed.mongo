@@ -110,6 +110,11 @@ public class MongoImportConfigBuilder extends AbstractMongoConfigBuilder<IMongoI
         return this;
     }
 
+  public MongoImportConfigBuilder stopTimeoutInMillis(long timeout) {
+    stopTimeout().set(timeout);
+    return this;
+  }
+
     @Override
     public IMongoImportConfig build() {
         IFeatureAwareVersion version = version().get();
@@ -125,9 +130,11 @@ public class MongoImportConfigBuilder extends AbstractMongoConfigBuilder<IMongoI
         Boolean drop = get(DROP);
         IMongoCmdOptions cmdOptions=get(CMD_OPTIONS);
         String pidFile = get(PID_FILE);
+        Long stopTimeoutInMillis = get(STOP_TIMEOUT_MILLIS);
 
-		return new ImmutableMongoImportConfig(version, net, timeout, cmdOptions, pidFile,
-				database, collection, importFile, type, headerline, jsonArray, upsert, drop);
+
+      return new ImmutableMongoImportConfig(version, net, timeout, cmdOptions, pidFile,
+				database, collection, importFile, type, headerline, jsonArray, upsert, drop, stopTimeoutInMillis);
     }
 
     static class ImmutableMongoImportConfig extends ImmutableMongoConfig implements IMongoImportConfig {
@@ -141,9 +148,9 @@ public class MongoImportConfigBuilder extends AbstractMongoConfigBuilder<IMongoI
         private final boolean _upsetDocuments;
 
 		public ImmutableMongoImportConfig(IFeatureAwareVersion version, Net net, Timeout timeout, IMongoCmdOptions cmdOptions, String pidFile,
-											String database, String collection, String importFile, String type, boolean headerline,
-											boolean jsonArray, boolean upsert, boolean drop) {
-			super(new SupportConfig(Command.MongoImport), version, net, null, null, timeout, cmdOptions, pidFile);
+                                          String database, String collection, String importFile, String type, boolean headerline,
+                                          boolean jsonArray, boolean upsert, boolean drop, Long stopTimeoutInMillis) {
+			super(new SupportConfig(Command.MongoImport, stopTimeoutInMillis), version, net, null, null, timeout, cmdOptions, pidFile);
             _databaseName=database;
             _collectionName=collection;
             _getImportFile=importFile;

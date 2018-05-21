@@ -23,6 +23,8 @@ package de.flapdoodle.embed.mongo.config;
 import de.flapdoodle.embed.process.config.ISupportConfig;
 import de.flapdoodle.embed.process.extract.ExecutableFileAlreadyExistsException;
 
+import java.util.concurrent.TimeUnit;
+
 
 public abstract class AbstractSupportConfig implements ISupportConfig {
 
@@ -36,6 +38,12 @@ public abstract class AbstractSupportConfig implements ISupportConfig {
 					"-----------------------------------------------------\n\n";
 		}
 		return null;
+	}
+
+
+	@Override
+	public long maxStopTimeoutMillis() {
+		return TimeUnit.SECONDS.toMillis(5);
 	}
 
 

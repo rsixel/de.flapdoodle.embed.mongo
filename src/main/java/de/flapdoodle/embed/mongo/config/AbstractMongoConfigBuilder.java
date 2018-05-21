@@ -22,6 +22,7 @@ package de.flapdoodle.embed.mongo.config;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion;
 import de.flapdoodle.embed.process.builder.AbstractBuilder;
@@ -39,15 +40,17 @@ public abstract class AbstractMongoConfigBuilder<T extends IMongoConfig> extends
 	protected static final TypedProperty<String> USERNAME = TypedProperty.with("UserName", String.class);
 	protected static final TypedProperty<String> PASSWORD = TypedProperty.with("Password", String.class);
 	protected static final TypedProperty<String> DBNAME = TypedProperty.with("DbName", String.class);
+	protected static final TypedProperty<Long> STOP_TIMEOUT_MILLIS = TypedProperty.with("StopTimeout", Long.class);
 
 
-	public AbstractMongoConfigBuilder() throws UnknownHostException, IOException  {
+	public AbstractMongoConfigBuilder() throws IOException  {
 		timeout().setDefault(new Timeout());
 		net().setDefault(new Net());
 		cmdOptions().setDefault(new MongoCmdOptionsBuilder().build());
 		username().setDefault("");
 		password().setDefault("");
 		dbName().setDefault("");
+        stopTimeout().setDefault(TimeUnit.SECONDS.toMillis(5));
 	}
 
 	protected IProperty<IFeatureAwareVersion> version() {
@@ -69,6 +72,10 @@ public abstract class AbstractMongoConfigBuilder<T extends IMongoConfig> extends
 	protected IProperty<String> dbName() {
 		return property(DBNAME);
 	}
+
+	protected IProperty<Long> stopTimeout() {
+	  return property(STOP_TIMEOUT_MILLIS);
+    }
 
 	protected IProperty<Net> net() {
 		return property(NET);

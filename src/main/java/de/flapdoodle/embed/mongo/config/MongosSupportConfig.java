@@ -22,10 +22,12 @@ package de.flapdoodle.embed.mongo.config;
 
 import de.flapdoodle.embed.process.config.ISupportConfig;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MongosSupportConfig extends AbstractSupportConfig {
 
-	static MongosSupportConfig _instance=new MongosSupportConfig();
+	private static MongosSupportConfig _instance=new MongosSupportConfig();
 	
 	@Override
 	public String getName() {
@@ -36,7 +38,6 @@ public class MongosSupportConfig extends AbstractSupportConfig {
 	public String getSupportUrl() {
 		return "https://github.com/flapdoodle-oss/embedmongo.flapdoodle.de/issues\n";
 	}
-	
 	public static ISupportConfig getInstance() {
 		return _instance;
 	}

@@ -153,16 +153,23 @@ public class MongoDumpConfigBuilder extends AbstractMongoConfigBuilder<IMongoDum
       return this;
    }
 
+   public MongoDumpConfigBuilder stopTimeoutInMillis(long timeout) {
+      stopTimeout().set(timeout);
+      return this;
+   }
+
    @Override
    public IMongoDumpConfig build() {
       Net net = net().get();
       Timeout timeout = timeout().get();
+      Long stopTimeoutInMillis = get(STOP_TIMEOUT_MILLIS);
+
 
       return new ImmutableMongoDumpConfig(get(VERSION, null), net, timeout, get(VERBOSE, false), get(PID_FILE),
          get(DB_NAME, null), get(COLLECTION, null), get(QUERY, null), get(QUERY_FILE, null), get(READ_PREFERENCE, null),
          get(FORCE_TABLE_SCAN, false), get(ARCHIVE, null), get(DUMP_DB_USERS_ROLES, false), get(OUT, null), get(GZIP, false),
          get(REPAIR, false), get(OPLOG, null), get(EXCLUDE_COLLECTION, null), get(EXCLUDE_COLLECTION_WITH_PREFIX, null),
-         get(NUM_PARALLEL_COLLECTIONS, 4));
+         get(NUM_PARALLEL_COLLECTIONS, 4), stopTimeoutInMillis);
    }
 
    static class ImmutableMongoDumpConfig extends ImmutableMongoConfig implements IMongoDumpConfig {
@@ -188,8 +195,8 @@ public class MongoDumpConfigBuilder extends AbstractMongoConfigBuilder<IMongoDum
       public ImmutableMongoDumpConfig(IFeatureAwareVersion version, Net net, Timeout timeout, boolean verbose, String pidFile,
                                          String database, String collection, String query, String queryFile, String readPreference, boolean forceTableScan,
                                          String archive, boolean dumpDbUsersAndRoles, String out, boolean gzip, boolean repair,
-                                         boolean oplog, String excludeCollection, String excludeCollectionWithPrefix, Integer numParallelCollections) {
-         super(new SupportConfig(Command.MongoRestore), version, net, null, null, timeout, null, pidFile);
+                                         boolean oplog, String excludeCollection, String excludeCollectionWithPrefix, Integer numParallelCollections, long stopTimeoutInMillis) {
+         super(new SupportConfig(Command.MongoRestore, stopTimeoutInMillis), version, net, null, null, timeout, null, pidFile);
          _verbose = verbose;
          _databaseName = database;
          _collectionName = collection;

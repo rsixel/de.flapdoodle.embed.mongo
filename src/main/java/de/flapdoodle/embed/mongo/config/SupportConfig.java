@@ -22,12 +22,13 @@ package de.flapdoodle.embed.mongo.config;
 
 import de.flapdoodle.embed.mongo.Command;
 
-
 public class SupportConfig extends AbstractSupportConfig {
 	private final Command command;
+	private long maxStopTimeoutMillis;
 
-	public SupportConfig(Command command) {
+	public SupportConfig(Command command, long maxStopTimeoutMillis) {
 		this.command = command;
+		this.maxStopTimeoutMillis = maxStopTimeoutMillis;
 	}
 	
 	@Override
@@ -39,7 +40,12 @@ public class SupportConfig extends AbstractSupportConfig {
 	public String getSupportUrl() {
 		return baseUrl()+"/issues\n";
 	}
-	
+
+	@Override
+	public long maxStopTimeoutMillis() {
+		return maxStopTimeoutMillis;
+	}
+
 	public static String baseUrl() {
 		return "https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo";
 	}
