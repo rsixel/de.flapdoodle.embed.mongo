@@ -193,16 +193,29 @@ public enum Version implements IFeatureAwareVersion {
    */
   @Deprecated
   V3_2_1("3.2.1", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE),
+  V3_2_20("3.2.20", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE),
 
   /**
    * Latest 3 series production release
    */
+  @Deprecated
   V3_3_1("3.3.1", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE),
+  @Deprecated
   V3_4_3("3.4.3", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE),
+  /**
+   * last version with solaris support
+   */
+  V3_4_5("3.4.5", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE),
+  V3_4_15("3.4.15", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_SOLARIS_SUPPORT),
   V3_5_5("3.5.5", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE),
+  @Deprecated
   V3_6_0("3.6.0", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT, Feature.NO_BIND_IP_TO_LOCALHOST),
+  @Deprecated
   V3_6_2("3.6.2", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT, Feature.NO_BIND_IP_TO_LOCALHOST),
+  @Deprecated
   V3_6_3("3.6.3", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT, Feature.NO_BIND_IP_TO_LOCALHOST),
+
+  V3_6_5("3.6.5", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT, Feature.NO_BIND_IP_TO_LOCALHOST),
 
   LATEST_NIGHTLY("latest", Feature.SYNC_DELAY, Feature.STORAGE_ENGINE, Feature.ONLY_64BIT, Feature.NO_CHUNKSIZE_ARG, Feature.MONGOS_CONFIGDB_SET_STYLE, Feature.NO_HTTP_INTERFACE_ARG, Feature.ONLY_WITH_SSL, Feature.ONLY_WINDOWS_2008_SERVER, Feature.NO_SOLARIS_SUPPORT),
 
@@ -260,11 +273,11 @@ public enum Version implements IFeatureAwareVersion {
 		V3_1(V3_1_6),
 
 		@Deprecated
-		V3_2(V3_2_1),
+		V3_2(V3_2_20),
 		V3_3(V3_3_1),
-		V3_4(V3_4_3),
+		V3_4(V3_4_15),
 		V3_5(V3_5_5),
-		V3_6(V3_6_3),
+		V3_6(V3_6_5),
 
 		@Deprecated
 		LEGACY(V2_6),
