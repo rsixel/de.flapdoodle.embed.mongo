@@ -22,7 +22,11 @@ package de.flapdoodle.embed.mongo.distribution;
 
 import de.flapdoodle.embed.process.distribution.IVersion;
 
+import java.util.EnumSet;
+
 
 public interface IFeatureAwareVersion extends IVersion {
 	boolean enabled(Feature feature);
+
+	EnumSet<Feature> getFeatures();
 }

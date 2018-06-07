@@ -28,6 +28,8 @@ import org.junit.Test;
 
 import de.flapdoodle.embed.process.distribution.GenericVersion;
 
+import java.util.EnumSet;
+
 public class VersionsTest {
 
 	@Test
@@ -45,5 +47,13 @@ public class VersionsTest {
       assertThat(iFeatureAwareVersion.toString()).contains(version);
       assertThat(iFeatureAwareVersion.asInDownloadPath()).isEqualTo(version);
     }
+
+	@Test
+	public void getFeatures() {
+		EnumSet<Feature> features = Version.Main.PRODUCTION.getFeatures();
+		IFeatureAwareVersion iFeatureAwareVersion = Versions.withFeatures(new GenericVersion("6.6.6"), features);
+
+		assertThat(iFeatureAwareVersion.getFeatures()).containsAll(features);
+	}
 
 }

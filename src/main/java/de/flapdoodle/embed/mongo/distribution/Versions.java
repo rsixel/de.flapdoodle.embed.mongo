@@ -29,6 +29,10 @@ public class Versions {
 	private Versions() {
 		// no instance
 	}
+
+	public static IFeatureAwareVersion withFeatures(IVersion version, EnumSet<Feature> features) {
+		return new GenericFeatureAwareVersion(version, features);
+	}
 	
 	public static IFeatureAwareVersion withFeatures(IVersion version, Feature...features) {
 		return new GenericFeatureAwareVersion(version, features);
@@ -38,6 +42,11 @@ public class Versions {
 
 		private final IVersion _version;
 		private final EnumSet<Feature> _features;
+
+		public GenericFeatureAwareVersion(IVersion version, EnumSet<Feature> features) {
+			_version = version;
+			_features = EnumSet.copyOf(features);
+		}
 
 		public GenericFeatureAwareVersion(IVersion version, Feature...features) {
 			_version = version;
@@ -52,6 +61,11 @@ public class Versions {
 		@Override
 		public boolean enabled(Feature feature) {
 			return _features.contains(feature);
+		}
+
+		@Override
+		public EnumSet<Feature> getFeatures() {
+			return _features;
 		}
 
 		@Override

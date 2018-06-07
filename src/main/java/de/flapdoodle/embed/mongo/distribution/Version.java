@@ -241,6 +241,11 @@ public enum Version implements IFeatureAwareVersion {
 	}
 
 	@Override
+	public EnumSet<Feature> getFeatures() {
+		return EnumSet.copyOf(features);
+	}
+
+	@Override
 	public String toString() {
 		return "Version{" + specificVersion + '}';
 	}
@@ -282,8 +287,7 @@ public enum Version implements IFeatureAwareVersion {
 		@Deprecated
 		LEGACY(V2_6),
 		PRODUCTION(V3_6),
-		DEVELOPMENT(LATEST_NIGHTLY),
-		;
+		DEVELOPMENT(LATEST_NIGHTLY);
 
 		private final IFeatureAwareVersion _latest;
 
@@ -299,6 +303,11 @@ public enum Version implements IFeatureAwareVersion {
 		@Override
 		public boolean enabled(Feature feature) {
 			return _latest.enabled(feature);
+		}
+
+		@Override
+		public EnumSet<Feature> getFeatures() {
+			return _latest.getFeatures();
 		}
 	}
 }
