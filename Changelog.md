@@ -1,5 +1,19 @@
 ### Changelog
 
+#### 2.1.1 / 2.1.0
+
+- implemented getFeatures of an IFeatureAwareVersion to create your own GenericVersion with Features of Version X
+- fixes gh-255 
+- fixes gh-244 updating mongodb driver
+- use random port in test
+- use process lib 2.0.5
+- Fix transisent dependency on Apache Commons-IO
+- removed version 3.7
+- Name the tests by version to help diagnose problems with specific versions
+- added toString in GenericFeatureAwareVersion
+- fixes gh-240
+- gh-237 Unable to use '--archive' with mongodump
+
 #### 2.0.4
 - mongodump with archive option
 
