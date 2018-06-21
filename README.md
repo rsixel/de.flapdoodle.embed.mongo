@@ -49,6 +49,10 @@ Poll: [Which MongoDB version should stay supported?](https://docs.google.com/for
 - https://github.com/lordofthejars/nosql-unit - extended nosql unit testing
 - https://github.com/jirutka/embedmongo-spring - Spring Factory Bean for EmbedMongo
 
+### Backward binary compatibility and API changes
+
+There is a report on backward binary compatibility and API changes for the library: https://abi-laboratory.pro/java/tracker/timeline/de.flapdoodle.embed.mongo/ -> thanks @lvc
+
 ## Howto
 
 ### Maven
