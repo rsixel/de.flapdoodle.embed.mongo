@@ -1,7 +1,7 @@
 #!/bin/sh
-mvn clean install
-mvn release:clean
-mvn release:prepare
-mvn release:perform
+./mvnw clean install
+./mvnw release:clean
+./mvnw release:prepare
+./mvnw release:perform
 
 
