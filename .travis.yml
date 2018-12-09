@@ -16,7 +16,7 @@ jdk:
 
 env:
   matrix:
-    - TARGET='mvn test'
+    - TARGET='./mvnw test'
 
 notifications:
   email:
