@@ -30,83 +30,102 @@ import de.flapdoodle.embed.process.distribution.BitSize;
 import de.flapdoodle.embed.process.distribution.Distribution;
 import de.flapdoodle.embed.process.distribution.IVersion;
 import de.flapdoodle.embed.process.distribution.Platform;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  */
 public class Paths implements IPackageResolver {
 
-	private final Command command;
+    private final Command command;
 
-	public Paths(Command command) {
-		this.command=command;
-	}
+    public Paths(Command command) {
+        this.command = command;
+    }
 
-	@Override
-	public FileSet getFileSet(Distribution distribution) {
-		String executableFileName;
-		switch (distribution.getPlatform()) {
-			case Linux:
-			case OS_X:
-			case Solaris:
-			case FreeBSD:
-				executableFileName = command.commandName();
-				break;
-			case Windows:
-				executableFileName = command.commandName()+".exe";
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
-		}
-		return FileSet.builder().addEntry(FileType.Executable, executableFileName).build();
-	}
+    @Override
+    public FileSet getFileSet(Distribution distribution) {
+        String executableFileName;
+        switch (distribution.getPlatform()) {
+            case Linux:
+            case OS_X:
+            case Solaris:
+            case FreeBSD:
+                executableFileName = command.commandName();
+                break;
+            case Windows:
+                executableFileName = command.commandName() + ".exe";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
+        }
+        return FileSet.builder().addEntry(FileType.Executable, executableFileName).build();
+    }
 
-	//CHECKSTYLE:OFF
-	@Override
-	public ArchiveType getArchiveType(Distribution distribution) {
-		ArchiveType archiveType;
-		switch (distribution.getPlatform()) {
-			case Linux:
-			case OS_X:
-			case Solaris:
-			case FreeBSD:
-				archiveType = ArchiveType.TGZ;
-				break;
-			case Windows:
-				archiveType = ArchiveType.ZIP;
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
-		}
-		return archiveType;
-	}
+    //CHECKSTYLE:OFF
+    @Override
+    public ArchiveType getArchiveType(Distribution distribution) {
+        ArchiveType archiveType;
+        switch (distribution.getPlatform()) {
+            case Linux:
+            case OS_X:
+            case Solaris:
+            case FreeBSD:
+                archiveType = ArchiveType.TGZ;
+                break;
+            case Windows:
+                archiveType = ArchiveType.ZIP;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Platform " + distribution.getPlatform());
+        }
+        return archiveType;
+    }
 
-	@Override
-	public String getPath(Distribution distribution) {
-		String versionStr = getVersionPart(distribution.getVersion());
+    @Override
+    public String getPath(Distribution distribution) {
+        String versionStr = getVersionPart(distribution.getVersion());
 
-		if (distribution.getPlatform() == Platform.Solaris && isFeatureEnabled(distribution, Feature.NO_SOLARIS_SUPPORT)) {
-		    throw new IllegalArgumentException("Mongodb for solaris is not available anymore");
+        if (distribution.getPlatform() == Platform.Solaris && isFeatureEnabled(distribution, Feature.NO_SOLARIS_SUPPORT)) {
+            throw new IllegalArgumentException("Mongodb for solaris is not available anymore");
         }
 
-		ArchiveType archiveType = getArchiveType(distribution);
-		String archiveTypeStr = getArchiveString(archiveType);
+        ArchiveType archiveType = getArchiveType(distribution);
+        String archiveTypeStr = getArchiveString(archiveType);
 
         String platformStr = getPlattformString(distribution);
 
         String bitSizeStr = getBitSize(distribution);
 
-        if ((distribution.getBitsize()==BitSize.B64) && (distribution.getPlatform()==Platform.Windows)) {
-				versionStr = (useWindows2008PlusVersion(distribution) ? "2008plus-": "")
-                        + (withSsl(distribution) ? "ssl-": "")
-                        + versionStr;
-		}
-		if (distribution.getPlatform() == Platform.OS_X && withSsl(distribution) ) {
-            return platformStr + "/mongodb-" + platformStr + "-ssl-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
+        if ((distribution.getBitsize() == BitSize.B64) && (distribution.getPlatform() == Platform.Windows)) {
+            versionStr = (useWindows2008PlusVersion(distribution) ? "2008plus-" : "")
+                    + (withSsl(distribution) ? "ssl-" : "")
+                    + versionStr;
+        } else if (distribution.getPlatform() == Platform.Linux) {
+            versionStr = detectLinuxDistribution() + "-"
+                    + (withSsl(distribution) ? "ssl-" : "")
+                    + versionStr;
         }
 
-		return platformStr + "/mongodb-" + platformStr + "-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
-	}
+        String targetPlatformStr = platformStr;
+
+        if (platformStr.equals("osx")) {
+            targetPlatformStr = "macos";
+        }
+
+        if (distribution.getPlatform() == Platform.OS_X && withSsl(distribution)) {
+            return platformStr + "/mongodb-" + targetPlatformStr + "-ssl-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
+        }
+
+        return platformStr + "/mongodb-" + targetPlatformStr + "-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
+    }
 
     private String getArchiveString(ArchiveType archiveType) {
         String sarchiveType;
@@ -154,7 +173,7 @@ public class Paths implements IPackageResolver {
                 if (distribution.getVersion() instanceof IFeatureAwareVersion) {
                     IFeatureAwareVersion featuredVersion = (IFeatureAwareVersion) distribution.getVersion();
                     if (featuredVersion.enabled(Feature.ONLY_64BIT)) {
-                        throw new IllegalArgumentException("this version does not support 32Bit: "+distribution);
+                        throw new IllegalArgumentException("this version does not support 32Bit: " + distribution);
                     }
                 }
 
@@ -182,17 +201,57 @@ public class Paths implements IPackageResolver {
     }
 
     protected boolean useWindows2008PlusVersion(Distribution distribution) {
-	    String osName = System.getProperty("os.name");
+        String osName = System.getProperty("os.name");
         if (osName.contains("Windows Server 2008 R2")
                 || (distribution.getVersion() instanceof IFeatureAwareVersion)
-                && ((IFeatureAwareVersion) distribution.getVersion()).enabled(Feature.ONLY_WINDOWS_2008_SERVER))  {
+                && ((IFeatureAwareVersion) distribution.getVersion()).enabled(Feature.ONLY_WINDOWS_2008_SERVER)) {
             return true;
         } else {
             return osName.contains("Windows 7");
         }
-	}
+    }
 
-	protected boolean withSsl(Distribution distribution) {
+    protected String detectLinuxDistribution() {
+
+        String filename = "/etc/os-release";
+
+        String id = "";
+        String versionId = "";
+        String minorVesionId = "";
+
+        if (new File(filename).exists()) {
+
+            try {
+                Path filePath = java.nio.file.Paths.get(filename);
+
+                List<String> osRelease = Files.readAllLines(filePath, Charset.defaultCharset());
+
+                for (String line : osRelease) {
+
+                    String[] sl = line.split("=");
+
+                    switch (sl[0].trim()) {
+                        case "ID":
+                            id = sl[1];
+                            break;
+                        case "VERSION_ID":
+                            String[] v = sl[1].split("\\.");
+
+                            versionId = v[0];
+                            minorVesionId = v.length == 1 ? "0" : v[1];
+
+                            break;
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Paths.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return id + versionId + minorVesionId;
+    }
+
+    protected boolean withSsl(Distribution distribution) {
         if ((distribution.getPlatform() == Platform.Windows || distribution.getPlatform() == Platform.OS_X)
                 && distribution.getVersion() instanceof IFeatureAwareVersion) {
             return ((IFeatureAwareVersion) distribution.getVersion()).enabled(Feature.ONLY_WITH_SSL);
@@ -202,12 +261,12 @@ public class Paths implements IPackageResolver {
     }
 
     private static boolean isFeatureEnabled(Distribution distribution, Feature feature) {
-	    return (distribution.getVersion() instanceof IFeatureAwareVersion
-                &&  ((IFeatureAwareVersion) distribution.getVersion()).enabled(feature));
+        return (distribution.getVersion() instanceof IFeatureAwareVersion
+                && ((IFeatureAwareVersion) distribution.getVersion()).enabled(feature));
     }
 
-	protected static String getVersionPart(IVersion version) {
-		return version.asInDownloadPath();
-	}
+    protected static String getVersionPart(IVersion version) {
+        return version.asInDownloadPath();
+    }
 
 }
