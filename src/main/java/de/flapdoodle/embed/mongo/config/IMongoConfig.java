@@ -25,18 +25,20 @@ import de.flapdoodle.embed.process.config.IExecutableProcessConfig;
 
 public interface IMongoConfig extends IExecutableProcessConfig {
 
-	@Override
-	public IFeatureAwareVersion version();
+    @Override
+    public IFeatureAwareVersion version();
 
-	Timeout timeout();
+    Timeout timeout();
 
-	Net net();
+    Net net();
 
-	IMongoCmdOptions cmdOptions();
+    IMongoCmdOptions cmdOptions();
 
-	String password();
+    String password();
 
-	String userName();
+    String userName();
 
     String pidFile();
+    
+   
 }

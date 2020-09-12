@@ -40,59 +40,63 @@ import de.flapdoodle.embed.process.io.file.Files;
  */
 public class MongodProcess extends AbstractMongoProcess<IMongodConfig, MongodExecutable, MongodProcess> {
 
-	private static Logger logger = LoggerFactory.getLogger(MongodProcess.class);
+    private static Logger logger = LoggerFactory.getLogger(MongodProcess.class);
 
-	private File dbDir;
-	boolean dbDirIsTemp;
+    private File dbDir;
+    boolean dbDirIsTemp;
 
-	public MongodProcess(Distribution distribution, IMongodConfig config, IRuntimeConfig runtimeConfig,
-			MongodExecutable mongodExecutable) throws IOException {
-		super(distribution, config, runtimeConfig, mongodExecutable);
+    public MongodProcess(Distribution distribution, IMongodConfig config, IRuntimeConfig runtimeConfig,
+            MongodExecutable mongodExecutable) throws IOException {
+        super(distribution, config, runtimeConfig, mongodExecutable);
 
-	}
+    }
 
-	@Override
-	protected void onBeforeProcess(IRuntimeConfig runtimeConfig) throws IOException {
-		super.onBeforeProcess(runtimeConfig);
+    @Override
+    protected void onBeforeProcess(IRuntimeConfig runtimeConfig) throws IOException {
+        super.onBeforeProcess(runtimeConfig);
 
-		IMongodConfig config = getConfig();
+        IMongodConfig config = getConfig();
 
-		File tmpDbDir;
-		if (config.replication().getDatabaseDir() != null) {
-			tmpDbDir = Files.createOrCheckDir(config.replication().getDatabaseDir());
-		} else {
-			tmpDbDir = Files.createTempDir(PropertyOrPlatformTempDir.defaultInstance(),"embedmongo-db");
-			dbDirIsTemp = true;
-		}
-		this.dbDir = tmpDbDir;
-	}
-	
-	@Override
-	protected void onBeforeProcessStart(ProcessBuilder processBuilder, IMongodConfig config, IRuntimeConfig runtimeConfig) {
-		config.processListener().onBeforeProcessStart(this.dbDir,dbDirIsTemp);
-		super.onBeforeProcessStart(processBuilder, config, runtimeConfig);
-	}
-	
-	@Override
-	protected void onAfterProcessStop(IMongodConfig config, IRuntimeConfig runtimeConfig) {
-		super.onAfterProcessStop(config, runtimeConfig);
-		config.processListener().onAfterProcessStop(this.dbDir,dbDirIsTemp);
-	}
+        File tmpDbDir;
+        if (config.replication().getDatabaseDir() != null) {
+            tmpDbDir = Files.createOrCheckDir(config.replication().getDatabaseDir());
+        } else {
+            tmpDbDir = Files.createTempDir(PropertyOrPlatformTempDir.defaultInstance(), "embedmongo-db");
+            dbDirIsTemp = true;
+        }
+        this.dbDir = tmpDbDir;
+    }
 
+    @Override
+    protected void onBeforeProcessStart(ProcessBuilder processBuilder, IMongodConfig config, IRuntimeConfig runtimeConfig) {
+        config.processListener().onBeforeProcessStart(this.dbDir, dbDirIsTemp);
+        super.onBeforeProcessStart(processBuilder, config, runtimeConfig);
+    }
 
-	@Override
-	protected List<String> getCommandLine(Distribution distribution, IMongodConfig config, IExtractedFileSet files) throws IOException {
-		return Mongod.enhanceCommandLinePlattformSpecific(distribution, Mongod.getCommandLine(getConfig(), files, dbDir));
-	}
+    @Override
+    protected void onAfterProcessStop(IMongodConfig config, IRuntimeConfig runtimeConfig) {
+        super.onAfterProcessStop(config, runtimeConfig);
+        config.processListener().onAfterProcessStop(this.dbDir, dbDirIsTemp);
+    }
 
-	@Override
-	protected void deleteTempFiles() {
-		super.deleteTempFiles();
-		
-		if ((dbDir != null) && (dbDirIsTemp) && (!Files.forceDelete(dbDir))) {
-			logger.warn("Could not delete temp db dir: {}", dbDir);
-		}
-		
-	}
+    @Override
+    protected List<String> getCommandLine(Distribution distribution, IMongodConfig config, IExtractedFileSet files) throws IOException {
+        return Mongod.enhanceCommandLinePlattformSpecific(distribution, Mongod.getCommandLine(getConfig(), files, dbDir));
+    }
+
+    @Override
+    protected void deleteTempFiles() {
+        super.deleteTempFiles();
+
+        if ((dbDir != null) && (dbDirIsTemp) && (!Files.forceDelete(dbDir))) {
+            logger.warn("Could not delete temp db dir: {}", dbDir);
+        }
+
+    }
+
+    @Override
+    protected String successMessage() {
+        return "Waiting for connections";
+    }
 
 }

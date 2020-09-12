@@ -2,6 +2,7 @@
 
 #### 2.1.1 / 2.1.0
 
+- download path update
 - implemented getFeatures of an IFeatureAwareVersion to create your own GenericVersion with Features of Version X
 - fixes gh-255 
 - fixes gh-244 updating mongodb driver
