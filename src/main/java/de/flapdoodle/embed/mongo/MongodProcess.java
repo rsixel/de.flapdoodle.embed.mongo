@@ -94,9 +94,5 @@ public class MongodProcess extends AbstractMongoProcess<IMongodConfig, MongodExe
 
     }
 
-    @Override
-    protected String successMessage() {
-        return "Waiting for connections";
-    }
 
 }
