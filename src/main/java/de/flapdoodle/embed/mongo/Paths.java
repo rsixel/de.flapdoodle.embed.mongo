@@ -126,11 +126,14 @@ public class Paths implements IPackageResolver {
     public String detectTargetMacOsPlatform(String platformStr, String versionStr) {
         String targetPlatformStr = platformStr;
         Float versionNum = -1F;
-        try {
-            versionNum = Float.parseFloat(versionStr);
-        } catch (NumberFormatException nfe) {
-        }
-        if (platformStr.equals("osx") && versionNum>=4.2F) {
+
+        String[] v = versionStr.split("\\.");
+
+        int version = Integer.parseInt(v[0]);
+        int minor = Integer.parseInt(v[1]);
+
+        if (version == 4 && minor >= 2 || version > 4) {
+
             targetPlatformStr = "macos";
         }
         return targetPlatformStr;
