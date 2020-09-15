@@ -114,9 +114,10 @@ public class Paths implements IPackageResolver {
                     + versionStr;
         }
 
-        String targetPlatformStr = detectTargetMacOsPlatform(platformStr, versionStr);
+        String targetPlatformStr = platformStr;
 
         if (distribution.getPlatform() == Platform.OS_X && withSsl(distribution)) {
+            targetPlatformStr = detectTargetMacOsPlatform(platformStr, versionStr);
             return platformStr + "/mongodb-" + targetPlatformStr + "-ssl-" + bitSizeStr + "-" + versionStr + "." + archiveTypeStr;
         }
 
