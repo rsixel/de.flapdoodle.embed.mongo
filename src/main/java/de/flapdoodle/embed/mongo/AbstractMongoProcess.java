@@ -40,6 +40,8 @@ import de.flapdoodle.embed.process.runtime.AbstractProcess;
 import de.flapdoodle.embed.process.runtime.Executable;
 import de.flapdoodle.embed.process.runtime.IStopable;
 import de.flapdoodle.embed.process.runtime.ProcessControl;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 public abstract class AbstractMongoProcess<T extends IMongoConfig, E extends Executable<T, P>, P extends IStopable> extends AbstractProcess<T, E, P> {
 
@@ -47,13 +49,9 @@ public abstract class AbstractMongoProcess<T extends IMongoConfig, E extends Exe
 
     boolean stopped = false;
 
-    Distribution distribution;
-
     public AbstractMongoProcess(Distribution distribution, T config, IRuntimeConfig runtimeConfig, E executable)
             throws IOException {
         super(distribution, config, runtimeConfig, executable);
-
-        this.distribution = distribution;
     }
 
     @Override
@@ -90,8 +88,8 @@ public abstract class AbstractMongoProcess<T extends IMongoConfig, E extends Exe
     protected String successMessage() {
         String result = "waiting for connections on port";
 
-        if (this.distribution != null) {
-            String[] v = this.distribution.getVersion().asInDownloadPath().split("\\.");
+        if (getDistribution() != null) {
+            String[] v = getDistribution().getVersion().asInDownloadPath().split("\\.");
 
             int version = Integer.parseInt(v[0]);
             int minor = Integer.parseInt(v[1]);
@@ -151,6 +149,19 @@ public abstract class AbstractMongoProcess<T extends IMongoConfig, E extends Exe
             logger.error("sendStop", e);
         }
         return false;
+    }
+
+    protected Distribution getDistribution() {
+        try {
+            Field f = AbstractProcess.class.getDeclaredField("distribution");
+            f.setAccessible(true);
+
+            return (Distribution) f.get(this);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(AbstractMongoProcess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
     }
 
 }
